@@ -5,8 +5,17 @@ import fs from "fs";
 const getHtml = async () => {
   try {
     const response = await axios.get(
-      "https://projects.co.id/public/browse_projects/listing"
+      "https://projects.co.id/public/browse_projects/listing",
+      {
+        params: {
+          filter: "newest",
+          page: "1",
+          ajax: "1",
+        },
+      }
     );
+    // console.log(response);
+    fs.writeFileSync("data/project.co.id.html", response.data);
     return response;
   } catch (error) {
     console.error(error);
@@ -49,19 +58,21 @@ const parsingJobs = async () => {
   const $ = cheerio.load(html.data);
 
   const title = $(
-    "#ds > div.form.form-horizontal > div > div:nth-child(3) > div.col-md-10.align-left > h2 > a"
+    "body > div.form.form-horizontal > div > div:nth-child(3) > div.col-md-10.align-left > h2 > a"
   )
     .text()
     .trim();
 
+  console.log(title);
+
   const description = $(
-    "#ds > div.form.form-horizontal > div > div:nth-child(3) > div.col-md-10.align-left > p:nth-child(2)"
+    "body > div.form.form-horizontal > div > div:nth-child(3) > div.col-md-10.align-left > p:nth-child(2)"
   )
     .text()
     .trim();
 
   const jobDetailsText = $(
-    "#ds > div.form.form-horizontal > div > div:nth-child(3) > div.col-md-10.align-left > div > div > div:nth-child(1)"
+    "body > div.form.form-horizontal > div > div:nth-child(3) > div.col-md-10.align-left > div > div > div:nth-child(1)"
   ).text();
 
   const { budget, finishDays } = parseJobDetails(jobDetailsText);
