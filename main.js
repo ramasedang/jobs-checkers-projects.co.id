@@ -1,7 +1,13 @@
 import parsingJobs from "./service/project.co.id.js";
 
-const main = async () => {
+// funsi untuk run setiap 5 menit
+const run = async () => {
   await parsingJobs();
+  setTimeout(run, 300000);
+};
+
+const main = async () => {
+  await run();
 };
 
 main();
