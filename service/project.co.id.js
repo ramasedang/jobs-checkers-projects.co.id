@@ -63,6 +63,10 @@ const parsingJobs = async () => {
     .text()
     .trim();
 
+  const link = $(
+    "body > div.form.form-horizontal > div > div:nth-child(3) > div.col-md-10.align-left > h2 > a"
+  ).attr("href");
+
   console.log(title);
 
   const description = $(
@@ -77,7 +81,7 @@ const parsingJobs = async () => {
 
   const { budget, finishDays } = parseJobDetails(jobDetailsText);
 
-  const newData = { title, description, budget, finishDays };
+  const newData = { title, description, budget, finishDays, link };
 
   const filePath = "data/project.co.id.json";
 
@@ -94,7 +98,7 @@ const parsingJobs = async () => {
       let webhooks =
         "https://discord.com/api/webhooks/1135946592378159255/zUq02QSAG0xKXH8_Jt2jkznzCwHCTyZQlmj9Kh2Dhu8O8gsUd4_FfJim3c4VdA63VTOt";
       axios.post(webhooks, {
-        content: `**Update:** ${newData.title}\n\n**Deskripsi:**\n${newData.description}\n\n**Budget:** ${newData.budget}\n**Estimasi Selesai:** ${newData.finishDays}`,
+        content: `**Update:** ${newData.title}\n\n**Deskripsi:**\n${newData.description}\n\n**Budget:** ${newData.budget}\n**Estimasi Selesai:** ${newData.finishDays} hari\n\n**Link:** ${newData.link}`,
       });
       fs.writeFileSync(filePath, JSON.stringify(newData));
     }
